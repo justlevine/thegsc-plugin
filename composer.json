@@ -30,7 +30,8 @@
     "simpod/php-coveralls-mirror": "^3.0",
     "squizlabs/php_codesniffer": "^3.6",
     "szepeviktor/phpstan-wordpress": "^1.0",
-    "wp-coding-standards/wpcs": "^2.3"
+    "wp-coding-standards/wpcs": "^2.3",
+    "php-stubs/woocommerce-stubs": "^6.0"
   },
   "config": {
     "optimize-autoloader": true,

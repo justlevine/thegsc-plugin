@@ -29,13 +29,20 @@ if ( ! class_exists( 'TheGSC' ) ) :
 		 */
 		public static $instance;
 
-		public static function instance() {
-			if ( ! isset( self::$instance ) && ! ( is_a( self::$instance, __CLASS__ ) ) ) {
+		/**
+		 * The one true instance of TheGSC.
+		 *
+		 * @todo not sure we're using.
+		 */
+		public static function instance() : self {
+			if ( ! ( is_a( self::$instance, __CLASS__ ) ) ) {
 				if ( ! function_exists( 'is_plugin_active' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/plugin.php';
 				}
 				self::$instance = new self();
 			}
+
+			return self::$instance;
 		}
 
 			/**
@@ -64,16 +71,22 @@ if ( ! class_exists( 'TheGSC' ) ) :
 			_doing_it_wrong( __FUNCTION__, esc_html__( 'De-serializing instances of the TheGSC class is not allowed', 'thegsc' ), '0.0.1' );
 		}
 
+		/**
+		 * Create class instances.
+		 *
+		 * @return array
+		 */
 		public static function create_instances() : array {
 			$instances = [
 				'comments'         => new BaseSetup\Comments(),
 				'images'           => new BaseSetup\Images(),
-				// 'menus'           => new BaseSetup\Images(),
+				//phpcs:ignore
+				// 'menus'           => new BaseSetup\Menus(),
 				'sidebars'         => new BaseSetup\Sidebars(),
 				'admin'            => new BaseSetup\Admin(),
 				'acf'              => new BaseSetup\ACF(),
 				'post-thumbnails'  => new BaseSetup\PostThumbnails(),
-				'post-thumbnails'  => new BaseSetup\Seo(),
+				'seo'              => new BaseSetup\Seo(),
 				'events'           => new PostTypes\Events(),
 				'guides'           => new PostTypes\Guides(),
 				'guide_categories' => new GraphQL\GuideConnections(),
@@ -82,6 +95,9 @@ if ( ! class_exists( 'TheGSC' ) ) :
 			return $instances;
 		}
 
+		/**
+		 * Runs the plugin
+		 */
 		public static function run() : void {
 			$instances = self::create_instances();
 

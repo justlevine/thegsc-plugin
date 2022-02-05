@@ -8,7 +8,15 @@
 
 namespace TheGSC\BaseSetup;
 
-class Admin {
+use TheGSC\Interfaces\Hookable;
+
+/**
+ * Class - Admin
+ */
+class Admin implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function initialize() : void {
 		remove_action( 'admin_notices', 'woothemes_updater_notice' );
 		add_action( 'admin_init', [ $this, 'remove_dashboard_widgets' ] );
@@ -18,9 +26,6 @@ class Admin {
 		add_filter( 'manage_edit-page_columns', [ $this, 'last_modified_column' ] );
 		add_filter( 'manage_edit-page_sortable_columns', [ $this, 'last_modified_column' ] );
 		add_action( 'manage_pages_custom_column', [ $this, 'last_modified_column_content' ] );
-
-		// Disable BSF nags.
-		define( 'BSF_PRODUCTS_NOTICES', false );
 	}
 
 	/**
@@ -86,12 +91,12 @@ class Admin {
 		if ( 'modified-last' !== $column_name ) {
 			return;
 		}
-		$modified_date   = the_modified_date( 'Y/m/d - g:i A' );
+		$modified_date   = get_the_modified_date( 'Y/m/d - g:i A' );
 		$modified_author = get_the_modified_author();
 
-		echo esc_attr( $modified_date );
+		echo is_string( $modified_date ) ? esc_attr( $modified_date ) : null;
 		echo '<br>';
-		echo '<strong>' . esc_attr( $modified_author ) . '</strong>';
+		echo is_string( $modified_author ) ? '<strong>' . esc_attr( $modified_author ) . '</strong>' : null;
 	}
 
 	/**

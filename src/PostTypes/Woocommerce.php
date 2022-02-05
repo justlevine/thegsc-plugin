@@ -8,9 +8,17 @@
 
 namespace TheGSC\PostTypes;
 
+use TheGSC\Interfaces\Hookable;
 use WC_Order;
+use WP_User;
 
-class Woocommerce {
+/**
+ * Class - Woocommerce
+ */
+class Woocommerce implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function initialize() : void {
 		// Remove Woocommerce.com Nag.
 		add_filter( 'woocommerce_helper_suppress_admin_notices', '__return_true' );
@@ -51,25 +59,28 @@ class Woocommerce {
 	 *
 	 * @param int $order_id .
 	 */
-	public function link_guest_email_to_customer( int $order_id ) {
+	public function link_guest_email_to_customer( int $order_id ) : void {
 		if ( ! is_user_logged_in() ) {
-			$order = new \WC_Order( $order_id );
+			$order = new WC_Order( $order_id );
 			$user  = $order->get_user();
 
-			if ( ! $user ) { // if no user is associated with the order.
-				$order_email = $order->get_billing_email();
+			if ( $user instanceof WP_User ) {
+				return;
+			}
 
-				$userdata = get_user_by( 'email', $order_email );
+			$order_email = $order->get_billing_email();
 
-				// If no email match, check usernames.
-				if ( ! isset( $userdata->ID ) ) {
-					$userdata = get_user_by( 'login', $order_email );
-				}
-				// Set customer id to existing user.
-				if ( isset( $userdata->ID ) && ! is_wp_error( $userdata->ID ) ) {
-					$order->set_customer_id( $userdata->ID );
-					update_post_meta( $order_id, '_customer_user', $userdata->ID );
-				}
+			$userdata = get_user_by( 'email', $order_email );
+
+			// If no email match, check usernames.
+			if ( false === $userdata ) {
+				$userdata = get_user_by( 'login', $order_email );
+			}
+
+			// Set customer id to existing user.
+			if ( $userdata instanceof WP_User ) {
+				$order->set_customer_id( $userdata->ID );
+				update_post_meta( $order_id, '_customer_user', $userdata->ID );
 			}
 		}
 	}
@@ -81,7 +92,7 @@ class Woocommerce {
 	 * @param string $text .
 	 * @param string $domain .
 	 */
-	public function rename_wc_sort_code( $translation, $text, $domain ) {
+	public function rename_wc_sort_code( $translation, $text, $domain ) : string {
 		if ( 'woocommerce' === $domain ) {
 			switch ( $text ) {
 				case 'Sort code':

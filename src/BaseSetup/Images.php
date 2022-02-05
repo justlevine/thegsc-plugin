@@ -8,10 +8,17 @@
 
 namespace TheGSC\BaseSetup;
 
+use TheGSC\Interfaces\Hookable;
 use WP_Post;
 
-class Images {
-	public function initialize() {
+/**
+ * {@inheritDoc}
+ */
+class Images implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function initialize() : void {
 		add_filter( 'wp_calculate_image_sizes', [ $this, 'filter_content_image_sizes_attr' ], 10, 2 );
 		add_filter( 'wp_get_attachment_image_attributes', [ $this, 'filter_post_thumbnail_sizes_attr' ], 10, 3 );
 	}

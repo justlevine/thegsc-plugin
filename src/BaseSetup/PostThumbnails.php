@@ -8,8 +8,16 @@
 
 namespace TheGSC\BaseSetup;
 
-class PostThumbnails {
-	public function initialize() {
+use TheGSC\Interfaces\Hookable;
+
+/**
+ * Class - Post Thumbnails
+ */
+class PostThumbnails implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function initialize() : void {
 		add_action( 'after_setup_theme', [ $this, 'action_add_post_thumbnail_support' ] );
 		add_action( 'after_setup_theme', [ $this, 'action_add_image_sizes' ] );
 		add_filter( 'image_size_names_choose', [ $this, 'add_image_sizes_names' ] );
@@ -25,14 +33,14 @@ class PostThumbnails {
 	/**
 	 * Adds support for post thumbnails.
 	 */
-	public function action_add_post_thumbnail_support() {
+	public function action_add_post_thumbnail_support() : void {
 		add_theme_support( 'post-thumbnails' );
 	}
 
 	/**
 	 * Adds custom image sizes.
 	 */
-	public function action_add_image_sizes() {
+	public function action_add_image_sizes() : void {
 		// Image Sizes.
 		add_image_size( 'full' );
 		add_image_size( 'background-img-1920w', 1920, 1080, true ); // 16:9
@@ -65,7 +73,7 @@ class PostThumbnails {
 	 *
 	 * @param array $sizes image sizes array.
 	 */
-	public function add_image_sizes_names( $sizes ) {
+	public function add_image_sizes_names( $sizes ) : array {
 		$custom_sizes = [
 			'full'                    => 'Full Size',
 			'background-img-1920w'    => 'Full Screen (Background) 16:9',

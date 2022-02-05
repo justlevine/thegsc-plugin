@@ -8,9 +8,17 @@
 
 namespace TheGSC\PostTypes;
 
+use TheGSC\Interfaces\Hookable;
 use WP_Post;
+use WP_Term;
 
-class Guides {
+/**
+ * Class - Guides
+ */
+class Guides implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function initialize() : void {
 		add_action( 'init', [ $this, 'register_cpt_guides' ] );
 		add_action( 'init', [ $this, 'register_taxonomy_guide_categories' ] );
@@ -22,7 +30,7 @@ class Guides {
 	/**
 	 * Register Custom Post Type
 	 */
-	public function register_cpt_guides() {
+	public function register_cpt_guides() : void {
 		$labels = [
 			'name'                  => __( 'Guides', 'thegsc' ),
 			'singular_name'         => __( 'Guide', 'thegsc' ),
@@ -87,35 +95,41 @@ class Guides {
 	/**
 	 * Adds the Guide Categories to the slug.
 	 *
-	 * @param string  $post_link
-	 * @param WP_Post $post
+	 * @param string  $post_link .
+	 * @param WP_Post $post .
 	 */
 	public function guide_permalinks( string $post_link, WP_Post $post ) : string {
 		$post_type = 'guide';
 		$taxonomy  = 'guide_cat';
 
-		if ( is_object( $post ) && $post->post_type === $post_type ) {
+		if ( $post->post_type === $post_type ) {
 			$terms = wp_get_object_terms( $post->ID, $taxonomy );
-			if ( $terms ) {
+
+			if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
 				$hierarchical_slugs = [];
 				$ancestors          = get_ancestors( $terms[0]->term_id, $taxonomy, 'taxonomy' );
+
 				foreach ( (array) $ancestors as $ancestor ) {
-					$ancestor_term        = get_term( $ancestor, $taxonomy );
-					$hierarchical_slugs[] = $ancestor_term->slug;
+					$ancestor_term = get_term( $ancestor, $taxonomy );
+					if ( $ancestor_term instanceof WP_Term ) {
+						$hierarchical_slugs[] = $ancestor_term->slug;
+					}
 				}
+
 				$hierarchical_slugs   = array_reverse( $hierarchical_slugs );
 				$hierarchical_slugs[] = $terms[0]->slug;
 
 				$post_link = str_replace( "%$taxonomy%", implode( '/', $hierarchical_slugs ), $post_link );
 			}
 		}
+
 		return $post_link;
 	}
 
 	/**
 	 * Register Category Taxonomy for Guides
 	 */
-	public function register_taxonomy_guide_categories() {
+	public function register_taxonomy_guide_categories() : void {
 		$labels = [
 			'name'                       => __( 'Guide Categories', 'thegsc' ),
 			'singular_name'              => __( 'Guide Category', 'thegsc' ),
@@ -152,6 +166,7 @@ class Guides {
 			'graphql_plural_name' => 'guideCategories',
 			'show_tagcloud'       => true,
 			'query_var'           => true,
+			//phpcs:ignore
 			// 'has_archive'       => 'guides',
 			'rewrite'             => [
 				'slug'         => 'guides',
@@ -178,7 +193,7 @@ class Guides {
 	 *
 	 * @param string $post_type .
 	 */
-	public function filter_guides_by_taxonomies( string $post_type ) {
+	public function filter_guides_by_taxonomies( string $post_type ) : void {
 		// Apply this only on a specific post type .
 		if ( 'guide' !== $post_type ) {
 			return;
@@ -189,17 +204,28 @@ class Guides {
 
 		foreach ( $taxonomies as $taxonomy_slug ) {
 			// Retrieve taxonomy data .
-			$taxonomy_obj  = get_taxonomy( $taxonomy_slug );
-			$taxonomy_name = $taxonomy_obj->labels->name;
+			$taxonomy_obj = get_taxonomy( $taxonomy_slug );
+			if ( false === $taxonomy_obj ) {
+				continue;
+			}
 
 			// Retrieve taxonomy terms .
 			$terms = get_terms( $taxonomy_slug );
+			if ( ! is_array( $terms ) ) {
+				continue;
+			}
+
+			$taxonomy_name = $taxonomy_obj->labels->name;
 
 			// Display filter HTML .
 			// @todo add nonce.
-			echo "<select name='{$taxonomy_slug}' id='{$taxonomy_slug}' class='postform'>";
+			echo sprintf( '<select name="%1$s" id="%1$s" class="postform">', esc_attr( $taxonomy_slug ) );
 			echo '<option value="">' . sprintf( 'Show All %s', esc_attr( $taxonomy_name ) ) . '</option>';
+
 			foreach ( $terms as $term ) {
+				if ( ! $term instanceof WP_Term ) {
+					continue;
+				}
 				printf(
 					'<option value="%1$s" %2$s>%3$s (%4$s)</option>',
 					esc_attr( $term->slug ),

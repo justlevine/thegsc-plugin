@@ -9,17 +9,29 @@
 namespace TheGSC\GraphQL;
 
 use GraphQL\Type\Definition\ResolveInfo;
+use TheGSC\Interfaces\Hookable;
 use WPGraphQL\AppContext;
 
-class GuideConnections {
+/**
+ * Class - GuideConnections
+ */
+class GuideConnections implements Hookable {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function initialize() : void {
 		add_filter( 'graphql_wp_connection_type_config', [ __CLASS__, 'set_connection_type_config' ] );
 		add_filter( 'graphql_map_input_fields_to_wp_query', [ __CLASS__, 'map_input_fields_to_wp_query' ], 10, 7 );
 	}
 
+	/**
+	 * Sets connectin type config for Guide cpt.
+	 *
+	 * @param array $config .
+	 */
 	public static function set_connection_type_config( array $config ) : array {
-		if ( $config['fromType'] !== 'RootQuery' || $config['toType'] !== 'guide' ) {
+		if ( 'RootQuery' !== $config['fromType'] || 'guide' !== $config['toType'] ) {
 			return $config;
 		}
 
@@ -36,7 +48,7 @@ class GuideConnections {
 				],
 				'categoryName'  => [
 					'type'        => 'String',
-					'description' => __( 'Use Event Category slug.', 'wp-graphql-tec' ),
+					'description' => __( 'Use Event Category slug.', 'thegsc' ),
 				],
 				'categoryNotIn' => [
 					'type'        => [ 'list_of' => 'ID' ],

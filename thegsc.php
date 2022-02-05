@@ -30,8 +30,10 @@ add_action(
 
 		$dependencies = [
 			'Composer autoload files' => is_readable( $autoload ),
+			//phpcs:disable
 			// 'WPGraphQL plugin'        => class_exists( 'WPGraphQL' ),
 			// 'Gravity Forms plugin'    => class_exists( 'GFAPI' ),
+			//phpcs:enable
 		];
 
 		$missing_dependencies = array_keys( array_diff( $dependencies, array_filter( $dependencies ) ) );
@@ -39,7 +41,7 @@ add_action(
 		$display_admin_notice = function() use ( $missing_dependencies ) {
 			?>
 		<div class="notice notice-error">
-			<p><?php esc_html_e( 'The WPGraphQL for Gravity Forms plugin can\'t be loaded because these dependencies are missing:', 'wp-graphql-gravity-forms' ); ?></p>
+			<p><?php esc_html_e( 'The GSC Plugin can\'t be loaded because these dependencies are missing:', 'thegsc' ); ?></p>
 			<ul>
 				<?php foreach ( $missing_dependencies as $missing_dependency ) : ?>
 					<li><?php echo esc_html( $missing_dependency ); ?></li>

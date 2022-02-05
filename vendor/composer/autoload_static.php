@@ -32,6 +32,7 @@ class ComposerStaticInit98627ed2f0d6a091192a0c89972205a1
         'TheGSC\\BaseSetup\\Sidebars' => __DIR__ . '/../..' . '/src/BaseSetup/Sidebars.php',
         'TheGSC\\Blocks\\BlockOverrides\\BlockOverrides' => __DIR__ . '/../..' . '/src/Blocks/BlockOverrides/BlockOverrides.php',
         'TheGSC\\GraphQL\\GuideConnections' => __DIR__ . '/../..' . '/src/GraphQL/GuideConnections.php',
+        'TheGSC\\Interfaces\\Hookable' => __DIR__ . '/../..' . '/src/Interfaces/Hookable.php',
         'TheGSC\\PostTypes\\Events' => __DIR__ . '/../..' . '/src/PostTypes/Events.php',
         'TheGSC\\PostTypes\\Guides' => __DIR__ . '/../..' . '/src/PostTypes/Guides.php',
         'TheGSC\\PostTypes\\Woocommerce' => __DIR__ . '/../..' . '/src/PostTypes/Woocommerce.php',

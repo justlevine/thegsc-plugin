@@ -8,12 +8,20 @@
 
 namespace TheGSC\PostTypes;
 
-class Events {
+use TheGSC\Interfaces\Hookable;
+use WP_Post;
+
+/**
+ * Class - Events
+ */
+class Events implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function initialize() : void {
 		if ( class_exists( 'Tribe__Events__Main' ) ) {
-			define( 'TRIBE_DISABLE_TOOLBAR_ITEMS', true );
-			define( 'TRIBE_HIDE_UPSELL', true );
-			// add_action( 'add_meta_boxes_tribe_events', [ $this, 'add_gf_events_meta_box' ] );
+			// phpcs:ignore
+			add_action( 'add_meta_boxes_tribe_events', [ $this, 'add_gf_events_meta_box' ] );
 			add_action( 'save_post', [ $this, 'save_gf_events_meta_box' ] );
 			add_action( 'event_tickets_rsvp_tickets_generated', [ $this, 'set_custom_from_email' ] );
 			add_action( 'event_tickets_woocommerce_tickets_generated', [ $this, 'set_custom_from_email' ] );
@@ -23,11 +31,30 @@ class Events {
 
 	/**
 	 * Add GF meta box to event edit page.
-	 *
-	 * @param WP_Post $post post object.
 	 */
-	public function add_gf_events_meta_box( $post ) {
+	public function add_gf_events_meta_box() : void {
 		add_meta_box( 'gf_events_meta_box', 'Gravity Forms Shortcode', [ $this, 'gsc_gf_events_markup' ], 'tribe_events', 'normal', 'core', null );
+	}
+
+	/**
+	 * Add GF form to event.
+	 *
+	 * @param WP_Post $post the post object.
+	 */
+	public function gsc_gf_events_markup( WP_Post $post ) : void {
+		$current_id    = get_post_meta( $post->ID, 'gf_shortcode', true );
+		$current_title = get_post_meta( $post->ID, 'gf_section_title', true );
+		wp_nonce_field( basename( __FILE__ ), 'meta-box-nonce' );
+		?>
+
+		<div>
+			<label for="gf_section_title">Section Title</label>
+			<input name="gf_section_title" type="text" value="<?php echo esc_attr( $current_title ); ?>">
+			<label for="gf_shortcode">Gravity Form ID</label>
+			<input name="gf_shortcode" type="number" value="<?php echo esc_attr( $current_id ); ?>">
+			<br />
+		</div>
+		<?php
 	}
 
 	/**
@@ -35,7 +62,7 @@ class Events {
 	 *
 	 * @param int $postid post id.
 	 */
-	public function save_gf_events_meta_box( $postid ) {
+	public function save_gf_events_meta_box( $postid ) : void {
 		if ( ! isset( $_POST['meta-box-nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['meta-box-nonce'] ) ), basename( __FILE__ ) ) ) {
 			return;
 		}
@@ -62,7 +89,7 @@ class Events {
 	/**
 	 * Hook the custom email functions
 	 */
-	public function set_custom_from_email() {
+	public function set_custom_from_email() : void {
 		// RSVP.
 		add_filter( 'wp_mail_from', [ $this, 'tickets_email_from' ] );
 		add_filter( 'wp_mail_from_name', [ $this, 'tickets_email_from_name' ] );

@@ -17,6 +17,7 @@ return array(
     'TheGSC\\BaseSetup\\Sidebars' => $baseDir . '/src/BaseSetup/Sidebars.php',
     'TheGSC\\Blocks\\BlockOverrides\\BlockOverrides' => $baseDir . '/src/Blocks/BlockOverrides/BlockOverrides.php',
     'TheGSC\\GraphQL\\GuideConnections' => $baseDir . '/src/GraphQL/GuideConnections.php',
+    'TheGSC\\Interfaces\\Hookable' => $baseDir . '/src/Interfaces/Hookable.php',
     'TheGSC\\PostTypes\\Events' => $baseDir . '/src/PostTypes/Events.php',
     'TheGSC\\PostTypes\\Guides' => $baseDir . '/src/PostTypes/Guides.php',
     'TheGSC\\PostTypes\\Woocommerce' => $baseDir . '/src/PostTypes/Woocommerce.php',

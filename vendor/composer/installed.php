@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '1d1d4a50f585ff17b2fed8d99483a8df7f083e8f',
         'name' => 'justlevine/thegsc-plugin',
         'dev' => true,
     ),
@@ -269,12 +269,12 @@
             'dev_requirement' => true,
         ),
         'justlevine/thegsc-plugin' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '1d1d4a50f585ff17b2fed8d99483a8df7f083e8f',
             'dev_requirement' => false,
         ),
         'lucatume/wp-browser' => array(
@@ -356,6 +356,15 @@
             'install_path' => __DIR__ . '/../phar-io/version',
             'aliases' => array(),
             'reference' => 'bae7c545bef187884426f042434e561ab1ddb182',
+            'dev_requirement' => true,
+        ),
+        'php-stubs/woocommerce-stubs' => array(
+            'pretty_version' => 'v6.0.0',
+            'version' => '6.0.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-stubs/woocommerce-stubs',
+            'aliases' => array(),
+            'reference' => '65e6be8a1b74b7be5d0d5591262342ff116f93db',
             'dev_requirement' => true,
         ),
         'php-stubs/wordpress-stubs' => array(

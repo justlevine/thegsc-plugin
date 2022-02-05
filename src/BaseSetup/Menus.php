@@ -8,11 +8,22 @@
 
 namespace TheGSC\BaseSetup;
 
-class Menus {
-	public function initialize() {
+use TheGSC\Interfaces\Hookable;
+
+/**
+ * Class - Menus
+ */
+class Menus implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function initialize() : void {
 		add_action( 'after_setup_theme', [ $this, 'register_nav_menus' ], 9 );
 	}
 
+	/**
+	 * Registers nav menu locations
+	 */
 	public function register_nav_menus() : void {
 		register_nav_menus(
 			[

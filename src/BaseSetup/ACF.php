@@ -8,7 +8,12 @@
 
 namespace TheGSC\BaseSetup;
 
-class ACF {
+use TheGSC\Interfaces\Hookable;
+
+/**
+ * Class - ACF
+ */
+class ACF implements Hookable {
 	/**
 	 * ACF Page options
 	 *
@@ -23,6 +28,9 @@ class ACF {
 	 */
 	public $acf_site;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function initialize() : void {
 		add_action( 'acf/init', [ $this, 'set_site_options' ] );
 		add_action( 'acf/init', [ $this, 'set_page_options' ] );

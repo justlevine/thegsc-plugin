@@ -8,12 +8,19 @@
 
 namespace TheGSC\BaseSetup;
 
+use TheGSC\Interfaces\Hookable;
+
 if ( ! defined( 'WPSEO_VERSION' ) ) {
 	return;
 }
 
-class Seo {
-
+/**
+ * Class - Seo
+ */
+class Seo implements Hookable {
+	/**
+	 * {@inheritDoc}
+	 */
 	public function initialize() : void {
 		add_filter( 'wpseo_breadcrumb_links', [ $this, 'filter_breadcrumb_links' ], 20, 1 );
 	}
@@ -21,8 +28,7 @@ class Seo {
 	/**
 	 * Filters Yoast Seo Breadcrumb urls.
 	 *
-	 * @param array $breadcrumbs
-	 * @return array
+	 * @param array $breadcrumbs .
 	 */
 	public function filter_breadcrumb_links( array $breadcrumbs ) : array {
 		$frontend_uri = function_exists( 'wpe_headless_get_setting' ) ? wpe_headless_get_setting( 'frontend_uri' ) : null;
