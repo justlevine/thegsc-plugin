@@ -1,0 +1,16 @@
+parameters:
+		level: 8
+		inferPrivatePropertyTypeFromConstructor: true
+		checkMissingIterableValueType: false
+		featureToggles:
+			disableRuntimeReflectionProvider: true
+		stubFiles:
+			# Simulate added properties
+		bootstrapFiles:
+			- thegsc.php
+		paths:
+			- thegsc.php
+			- src/
+
+		ignoreErrors:
+			- '#^Function apply_filters(_ref_array)? invoked with ([1-9]|1[0-2]) parameters, 2 required\.$#'
