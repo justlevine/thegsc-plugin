@@ -22,10 +22,31 @@
  * @author justlevine
  * @license GPL-3
  */
+/**
+ * Define plugin constants.
+ */
+function thegsc_plugin_constants() : void {
+	// Plugin Folder Path.
+	if ( ! defined( 'THEGSC_PLUGIN_DIR' ) ) {
+		define( 'THEGSC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+	}
+
+	// Plugin Folder URL.
+	if ( ! defined( 'THEGSC_PLUGIN_URL' ) ) {
+		define( 'WPGRAPHQL_GF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+	}
+
+	// Plugin Root File.
+	if ( ! defined( 'THEGSC_PLUGIN_FILE' ) ) {
+		define( 'THEGSC_PLUGIN_FILE', __FILE__ );
+	}
+}
 
 add_action(
 	'plugins_loaded',
 	function() {
+		thegsc_plugin_constants();
+
 		$autoload = plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 		$dependencies = [

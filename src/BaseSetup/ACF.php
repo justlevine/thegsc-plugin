@@ -41,6 +41,20 @@ class ACF implements Hookable {
 		add_filter( 'acf/include_fields', [ $this, 'setup_site_options_page' ] );
 		// Delete transient on save.
 		add_filter( 'acf/save_post', [ $this, 'clear_options_transient_on_save' ] );
+		// Save & Load from ACF-JSON
+		add_filter('acf/settings/save_json', [ $this, 'get_json_save_point']);
+		add_filter('acf/settings/load_json', [ $this, 'get_json_load_point']);
+	}
+
+	public function get_json_save_point() {
+		$path = THEGSC_PLUGIN_DIR . 'src/config/acf-json';
+		return $path;
+	}
+
+	public function get_json_load_point(array $paths) {
+		$paths[] = THEGSC_PLUGIN_DIR . 'src/config/acf-json';
+
+		return $paths;
 	}
 
 		/**
