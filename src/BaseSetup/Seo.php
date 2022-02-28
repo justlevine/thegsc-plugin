@@ -31,21 +31,22 @@ class Seo implements Hookable {
 	 * @param array $breadcrumbs .
 	 */
 	public function filter_breadcrumb_links( array $breadcrumbs ) : array {
-		$frontend_uri = function_exists( 'wpe_headless_get_setting' ) ? wpe_headless_get_setting( 'frontend_uri' ) : null;
+		$frontend_uri = function_exists( 'WPE\FaustWP\Settings\faustwp_get_setting' ) ? \WPE\FaustWP\Settings\faustwp_get_setting( 'frontend_uri' ) : null;
+
 		if ( empty( $frontend_uri ) ) {
 			return $breadcrumbs;
 		}
-				$frontend_uri = trailingslashit( $frontend_uri );
+		$frontend_uri         = trailingslashit( $frontend_uri );
 		$home_url             = trailingslashit( home_url() );
 
-		$return = array_map(
-			function( &$breadcrumb ) use ( $frontend_uri, $home_url ) {
+		return array_map(
+			function( $breadcrumb ) use ( $frontend_uri, $home_url ) {
 				$breadcrumb['url'] = str_replace( $home_url, $frontend_uri, $breadcrumb['url'] );
 
 				return $breadcrumb;
 			},
 			$breadcrumbs
 		);
-		return $return;
 	}
 }
+	
