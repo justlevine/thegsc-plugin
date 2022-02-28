@@ -90,7 +90,9 @@ if ( ! class_exists( 'TheGSC' ) ) :
 				'events'           => new PostTypes\Events(),
 				'guides'           => new PostTypes\Guides(),
 				'guide_categories' => new GraphQL\GuideConnections(),
+				'global_styles'    => new GraphQL\GlobalStyles(),
 				'block_overrides'  => new Blocks\BlockOverrides\BlockOverrides(),
+				'graphql_filters' => new GraphQL\CoreSchemaFilters(),
 			];
 			return $instances;
 		}
